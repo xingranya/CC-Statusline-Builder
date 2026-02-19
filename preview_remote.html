@@ -238,7 +238,7 @@
         }
 
         .how-to-use.visible {
-            max-height: 600px;
+            max-height: 400px;
             opacity: 1;
         }
 
@@ -253,49 +253,6 @@
             font-size: 0.95rem;
             font-weight: 600;
             margin-bottom: 16px;
-        }
-
-        .method-tabs {
-            display: flex;
-            gap: 0;
-            margin-bottom: 16px;
-        }
-
-        .method-tab {
-            flex: 1;
-            padding: 8px 0;
-            text-align: center;
-            font-size: 0.82rem;
-            font-weight: 600;
-            font-family: inherit;
-            color: var(--text-muted);
-            background: var(--surface-2);
-            border: 1px solid var(--border);
-            cursor: pointer;
-            transition: all 0.15s ease;
-        }
-
-        .method-tab:first-child {
-            border-radius: var(--radius-sm) 0 0 var(--radius-sm);
-        }
-
-        .method-tab:last-child {
-            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-            border-left: none;
-        }
-
-        .method-tab.active {
-            background: var(--accent-soft);
-            border-color: var(--accent);
-            color: var(--text);
-        }
-
-        .method-content {
-            display: none;
-        }
-
-        .method-content.active {
-            display: block;
         }
 
         .steps {
@@ -341,17 +298,6 @@
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.78rem;
             color: #c084fc;
-        }
-
-        .step-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #7c3aed, #6366f1);
-            color: white;
-            font-size: 0.68rem;
-            font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 4px;
-            margin-bottom: 4px;
         }
 
         /* ===== 右侧：可滚动配置区 ===== */
@@ -605,21 +551,22 @@
                 <!-- How to Use（复制后展开） -->
                 <div class="how-to-use" id="howToUse">
                     <div class="how-to-use-inner">
-                        <h3>✅ 命令已复制！</h3>
+                        <h3>✅ 命令已复制！接下来：</h3>
                         <div class="steps">
                             <div class="step">
                                 <div class="step-num">1</div>
-                                <div class="step-text"><strong>打开终端</strong>，粘贴命令并回车 — 脚本会自动安装并完成配置</div>
+                                <div class="step-text"><strong>打开终端</strong>，粘贴刚才复制的命令并回车执行</div>
                             </div>
                             <div class="step">
                                 <div class="step-num">2</div>
-                                <div class="step-text">看到 <code>✅ Statusline installed!</code> 后，<strong>重启 Claude
-                                        Code</strong> 即生效</div>
+                                <div class="step-text">看到 <code>✅ Statusline installed!</code> 表示安装成功</div>
                             </div>
-                        </div>
-                        <div style="margin-top:14px; font-size:0.78rem; color:var(--text-muted);">
-                            仓库 &amp; 问题反馈：<a href="https://github.com/denki-san/CC-Statusline-Builder" target="_blank"
-                                style="color:var(--accent); text-decoration:none;">github.com/denki-san/CC-Statusline-Builder</a>
+                            <div class="step">
+                                <div class="step-num">3</div>
+                                <div class="step-text">在 Claude Code settings 中设置
+                                    <code>"statusline": "~/.claude/statusline.sh"</code>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -668,7 +615,7 @@
                         <h3 style="margin-top:4px">分支前缀</h3>
                         <div class="option-grid cols-3" id="gitPrefixGrid"></div>
                         <h3 style="margin-top:14px">状态模式</h3>
-                        <div class="option-grid cols-2" id="gitModeGrid"></div>
+                        <div class="option-grid cols-3" id="gitModeGrid"></div>
                     </div>
                 </div>
 
@@ -681,7 +628,7 @@
 
         const progressStyles = [
             { id: 'classic', name: 'Classic', filled: '▓', empty: '░', preview: '▓▓▓░░' },
-            { id: 'gradient', name: 'Gradient', filled: '█', empty: '▓▒░', preview: '███▓▒░', gradient: true },
+            { id: 'block', name: 'Block', filled: '█', empty: '░', preview: '███░░' },
             { id: 'diamond', name: 'Diamond', filled: '◆', empty: '◇', preview: '◆◆◆◇◇' },
             { id: 'dot', name: 'Dot', filled: '●', empty: '○', preview: '●●●○○' },
             { id: 'arrow', name: 'Arrow', filled: '▰', empty: '▱', preview: '▰▰▰▱▱' },
@@ -689,58 +636,37 @@
         ];
 
         const colorPresets = [
-            // ===== 6 个暗色方案 =====
             {
-                id: 'dracula', name: 'Dracula', type: 'dark',
-                model: '#af87ff', low: '#5fff87', mid: '#ffffaf', high: '#ff5f5f', token: '#afafd7', bar: '#af87ff',
-                ansi: { model: 141, low: 84, mid: 229, high: 203, token: 189, bar: 141 }
+                id: 'tokyo-night', name: 'Tokyo Night', model: '#d7afff', low: '#87d7ff', mid: '#d7af5f', high: '#ff8787', token: '#dfdfff',
+                ansi: { model: 183, low: 117, mid: 179, high: 210, token: 189 }
             },
             {
-                id: 'tokyo-night', name: 'Tokyo Night', type: 'dark',
-                model: '#bb9af7', low: '#7dcfff', mid: '#e0af68', high: '#f7768e', token: '#a9b1d6', bar: '#7aa2f7',
-                ansi: { model: 141, low: 117, mid: 179, high: 204, token: 146, bar: 111 }
+                id: 'catppuccin', name: 'Catppuccin', model: '#d7afff', low: '#afffaf', mid: '#ffffaf', high: '#ff8787', token: '#dfdfff',
+                ansi: { model: 183, low: 157, mid: 229, high: 210, token: 189 }
             },
             {
-                id: 'catppuccin', name: 'Catppuccin Mocha', type: 'dark',
-                model: '#cba6f7', low: '#a6e3a1', mid: '#f9e2af', high: '#f38ba8', token: '#bac2de', bar: '#89b4fa',
-                ansi: { model: 183, low: 150, mid: 223, high: 211, token: 146, bar: 111 }
+                id: 'nord', name: 'Nord', model: '#87d7ff', low: '#afd787', mid: '#ffd7af', high: '#af5f5f', token: '#afafd7',
+                ansi: { model: 117, low: 150, mid: 223, high: 131, token: 146 }
             },
             {
-                id: 'gruvbox', name: 'Gruvbox Dark', type: 'dark',
-                model: '#d3869b', low: '#b8bb26', mid: '#fabd2f', high: '#fb4934', token: '#d5c4a1', bar: '#fe8019',
-                ansi: { model: 175, low: 142, mid: 214, high: 203, token: 187, bar: 208 }
+                id: 'dracula', name: 'Dracula', model: '#af87ff', low: '#5fff87', mid: '#ffffaf', high: '#ff5f5f', token: '#afafd7',
+                ansi: { model: 141, low: 84, mid: 229, high: 203, token: 189 }
             },
             {
-                id: 'nord', name: 'Nord', type: 'dark',
-                model: '#b48ead', low: '#a3be8c', mid: '#ebcb8b', high: '#bf616a', token: '#81a1c1', bar: '#88c0d0',
-                ansi: { model: 139, low: 144, mid: 222, high: 131, token: 110, bar: 116 }
+                id: 'cyberpunk', name: 'Cyberpunk', model: '#ff87d7', low: '#5fff00', mid: '#ffff00', high: '#ff0000', token: '#ff87df',
+                ansi: { model: 212, low: 82, mid: 226, high: 196, token: 213 }
             },
             {
-                id: 'one-dark', name: 'One Dark', type: 'dark',
-                model: '#c678dd', low: '#98c379', mid: '#e5c07b', high: '#e06c75', token: '#abb2bf', bar: '#61afef',
-                ansi: { model: 176, low: 114, mid: 180, high: 168, token: 145, bar: 75 }
-            },
-            // ===== 2 个亮色方案 =====
-            {
-                id: 'github-light', name: 'GitHub Light', type: 'light',
-                model: '#6f42c1', low: '#22863a', mid: '#b08800', high: '#d73a49', token: '#586069', bar: '#0366d6',
-                ansi: { model: 97, low: 28, mid: 136, high: 160, token: 59, bar: 33 }
+                id: 'ocean', name: 'Ocean', model: '#5fd7ff', low: '#00afaf', mid: '#ffd75f', high: '#ff5f87', token: '#87afdf',
+                ansi: { model: 81, low: 37, mid: 221, high: 204, token: 117 }
             },
             {
-                id: 'solarized-light', name: 'Solarized Light', type: 'light',
-                model: '#6c71c4', low: '#859900', mid: '#b58900', high: '#dc322f', token: '#657b83', bar: '#268bd2',
-                ansi: { model: 62, low: 106, mid: 136, high: 160, token: 66, bar: 33 }
-            },
-            // ===== 2 个单色方案 =====
-            {
-                id: 'mono-dark', name: 'Mono Dark', type: 'dark',
-                model: '#e0e0e0', low: '#a0a0a0', mid: '#c0c0c0', high: '#ff6b6b', token: '#888888', bar: '#b0b0b0',
-                ansi: { model: 254, low: 247, mid: 250, high: 203, token: 245, bar: 249 }
+                id: 'solarized', name: 'Solarized', model: '#00afaf', low: '#87af00', mid: '#af8700', high: '#d75f00', token: '#878787',
+                ansi: { model: 37, low: 106, mid: 136, high: 166, token: 246 }
             },
             {
-                id: 'mono-light', name: 'Mono Light', type: 'light',
-                model: '#333333', low: '#555555', mid: '#444444', high: '#cc3333', token: '#777777', bar: '#444444',
-                ansi: { model: 236, low: 240, mid: 238, high: 160, token: 243, bar: 238 }
+                id: 'monochrome', name: 'Monochrome', model: '#eeeeee', low: '#878787', mid: '#d0d0d0', high: '#ff5f5f', token: '#bcbcbc',
+                ansi: { model: 255, low: 102, mid: 252, high: 203, token: 248 }
             },
         ];
 
@@ -766,13 +692,14 @@
 
         const gitModes = [
             { id: 'minimal', name: '极简', preview: '+3 ~2 ?1' },
+            { id: 'short', name: '简洁', preview: 'A3 M2 ?1' },
             { id: 'detailed', name: '详细', preview: '3 new, 2 modified, 1 untracked' },
         ];
 
         // ===== 状态 =====
         let state = {
             progressStyle: 'classic',
-            colorPreset: 'dracula',
+            colorPreset: 'tokyo-night',
             dirPrefix: 'none',
             tokenFormat: 'full',
             previewMode: 'dark',
@@ -791,29 +718,18 @@
             </div>
         `).join('');
 
-            // 按类型分组渲染配色方案
-            const darkSchemes = colorPresets.filter(c => c.type === 'dark');
-            const lightSchemes = colorPresets.filter(c => c.type === 'light');
-            const monoDark = colorPresets.filter(c => c.id === 'mono-dark');
-            const monoLight = colorPresets.filter(c => c.id === 'mono-light');
-            const nonMonoSchemes = colorPresets.filter(c => !c.id.startsWith('mono-'));
-
-            const renderColorCard = (c) => `
+            document.getElementById('colorPresetGrid').innerHTML = colorPresets.map(c => `
             <div class="option-card color-card ${state.colorPreset === c.id ? 'active' : ''}"
                  onclick="select('colorPreset','${c.id}')">
                 <div class="color-dots">
                     <div class="color-dot" style="background:${c.model}"></div>
-                    <div class="color-dot" style="background:${c.bar}"></div>
                     <div class="color-dot" style="background:${c.low}"></div>
                     <div class="color-dot" style="background:${c.mid}"></div>
                     <div class="color-dot" style="background:${c.high}"></div>
                 </div>
-                <div class="option-label">${c.name}${c.type === 'light' ? ' ☀️' : ''}</div>
+                <div class="option-label">${c.name}</div>
             </div>
-            `;
-
-            document.getElementById('colorPresetGrid').innerHTML =
-                colorPresets.map(renderColorCard).join('');
+        `).join('');
 
             document.getElementById('dirPrefixGrid').innerHTML = dirPrefixes.map(d => `
             <div class="option-card ${state.dirPrefix === d.id ? 'active' : ''}"
@@ -865,14 +781,6 @@
             updatePreview();
         }
 
-        // ===== 安装方式切换 =====
-        function switchMethod(method) {
-            document.querySelectorAll('.method-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.method-content').forEach(c => c.classList.remove('active'));
-            document.querySelector(`.method-tab[onclick="switchMethod('${method}')"]`).classList.add('active');
-            document.getElementById(`method-${method}`).classList.add('active');
-        }
-
         // ===== 预览模式 =====
         function setPreviewMode(mode) {
             state.previewMode = mode;
@@ -894,22 +802,9 @@
             const percent = 32;
             const filled = Math.round(percent / 10);
             const empty = 10 - filled;
-
-            // 生成进度条
-            let bar;
-            if (pStyle.gradient) {
-                // 渐变模式：███▓▒░░░░░
-                bar = pStyle.filled.repeat(filled);
-                if (empty > 0) bar += '▓';
-                if (empty > 1) bar += '▒';
-                if (empty > 2) bar += '░'.repeat(empty - 2);
-            } else {
-                bar = pStyle.filled.repeat(filled) + pStyle.empty.repeat(empty);
-            }
-
+            const bar = pStyle.filled.repeat(filled) + pStyle.empty.repeat(empty);
             const tokenText = tFormat.template.replace('{in}', '216').replace('{out}', '15');
-            // 进度条使用配色主题中的单一主题色
-            const barColor = color.bar;
+            const barColor = color.low;
 
             document.getElementById('statusLine1').innerHTML =
                 `<span style="color:${color.model}">[Opus 4.6]</span> ` +
@@ -1012,7 +907,6 @@ cwd=$(echo "$JSON_INPUT" | jq -r '.cwd // (.workspace.current_dir // "")')
 
 MODEL_COLOR="\\033[38;5;${a.model}m"
 RESET="\\033[0m"
-PROGRESS_BAR="\\033[38;5;${a.bar}m"
 PROGRESS_LOW="\\033[38;5;${a.low}m"
 PROGRESS_MID="\\033[38;5;${a.mid}m"
 PROGRESS_HIGH="\\033[38;5;${a.high}m"
@@ -1033,19 +927,7 @@ get_progress_color() {
     fi
 }
 
-${pStyle.gradient ? `get_progress_bar() {
-    local p=$1
-    local filled=$((p / 10))
-    local empty=$((10 - filled))
-    local bar=""
-    for ((i=0; i<filled; i++)); do bar+="█"; done
-    if (( empty > 0 )); then bar+="▓"; fi
-    if (( empty > 1 )); then bar+="▒"; fi
-    if (( empty > 2 )); then
-        for ((i=0; i<empty-2; i++)); do bar+="░"; done
-    fi
-    echo "$bar"
-}` : `get_progress_bar() {
+get_progress_bar() {
     local p=$1
     local filled=$((p / 10))
     local empty=$((10 - filled))
@@ -1053,7 +935,7 @@ ${pStyle.gradient ? `get_progress_bar() {
     for ((i=0; i<filled; i++)); do bar+="\${PROGRESS_FILLED}"; done
     for ((i=0; i<empty; i++)); do bar+="\${PROGRESS_EMPTY}"; done
     echo "$bar"
-}`}
+}
 
 get_directory() {
     local dir="$1"
@@ -1085,13 +967,14 @@ get_git_counts() {
 
 format_tokens() { echo $(($1 / 1000)); }
 
+progress_color=$(get_progress_color "$percent")
 progress_bar=$(get_progress_bar "$percent")
 directory=$(get_directory "$cwd")
 input_k=$(format_tokens "$input")
 output_k=$(format_tokens "$output")
 
 printf "\${MODEL_COLOR}[\${model}]\${RESET} "
-printf "\${PROGRESS_BAR}\${progress_bar} \${percent}%%\${RESET} "
+printf "\${progress_color}\${progress_bar} \${percent}%%\${RESET} "
 ${tokenPrintf}
 printf "\\n"
 
@@ -1114,14 +997,9 @@ fi` : '# Git 信息已关闭'}
         }
 
         // ===== 复制安装命令 =====
-        // Python 配置脚本（写入 settings.json）预先 base64 编码，避免命令行引号冲突
-        const CONFIG_PY_B64 = 'aW1wb3J0IGpzb24sIG9zCnAgPSBvcy5wYXRoLmV4cGFuZHVzZXIoIn4vLmNsYXVkZS9zZXR0aW5ncy5qc29uIikKcyA9IGpzb24ubG9hZChvcGVuKHApKSBpZiBvcy5wYXRoLmV4aXN0cyhwKSBlbHNlIHt9CnNbInN0YXR1c0xpbmUiXSA9IHsidHlwZSI6ICJjb21tYW5kIiwgImNvbW1hbmQiOiBvcy5wYXRoLmV4cGFuZHVzZXIoIn4vLmNsYXVkZS9zdGF0dXNsaW5lLnNoIil9Cmpzb24uZHVtcChzLCBvcGVuKHAsICJ3IiksIGluZGVudD0yLCBlbnN1cmVfYXNjaWk9RmFsc2UpCg==';
-
         function copyInstallCmd() {
             const script = generateScript();
-            // 两段 base64：脚本本体 + 配置脚本，命令里完全没有双引号，彻底避免 shell 解析问题
-            const b64 = btoa(unescape(encodeURIComponent(script)));
-            const command = `echo '${b64}' | base64 -d > ~/.claude/statusline.sh && chmod +x ~/.claude/statusline.sh && echo '${CONFIG_PY_B64}' | base64 -d | python3 && echo 'Statusline installed!'`;
+            const command = `mkdir -p ~/.claude && cat > ~/.claude/statusline.sh << 'STATUSLINE_EOF'\n${script}\nSTATUSLINE_EOF\nchmod +x ~/.claude/statusline.sh && echo "✅ Statusline installed!"`;
 
             const doCopy = (text) => {
                 // 优先用 clipboard API，file:// 下 fallback 到 execCommand
