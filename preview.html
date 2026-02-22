@@ -810,13 +810,6 @@
             </div>
         `).join('');
 
-            // 按类型分组渲染配色方案
-            const darkSchemes = colorPresets.filter(c => c.type === 'dark');
-            const lightSchemes = colorPresets.filter(c => c.type === 'light');
-            const monoDark = colorPresets.filter(c => c.id === 'mono-dark');
-            const monoLight = colorPresets.filter(c => c.id === 'mono-light');
-            const nonMonoSchemes = colorPresets.filter(c => !c.id.startsWith('mono-'));
-
             const renderColorCard = (c) => `
             <div class="option-card color-card ${state.colorPreset === c.id ? 'active' : ''}"
                  onclick="select('colorPreset','${c.id}')">
@@ -951,10 +944,6 @@
                     line2 += `<span style="color:${color.low}">+3</span> `;
                     line2 += `<span style="color:${color.mid}">~2</span> `;
                     line2 += `<span style="color:${color.token}">?1</span>`;
-                } else if (state.gitMode === 'short') {
-                    line2 += `<span style="color:${color.low}">A3</span> `;
-                    line2 += `<span style="color:${color.mid}">M2</span> `;
-                    line2 += `<span style="color:${color.token}">?1</span>`;
                 } else {
                     line2 += `<span style="color:${color.low}">3 new</span> `;
                     line2 += `<span style="color:${color.mid}">2 modified</span> `;
@@ -1004,10 +993,6 @@
             if (state.gitMode === 'minimal') {
                 gitCountsFmt = `[[ "$added" -gt 0 ]] && printf " \${GIT_CLEAN}+%s\${RESET}" "$added"
             [[ "$modified" -gt 0 ]] && printf " \${PROGRESS_MID}~%s\${RESET}" "$modified"
-            [[ "$untracked" -gt 0 ]] && printf " \${TOKEN_COLOR}?%s\${RESET}" "$untracked"`;
-            } else if (state.gitMode === 'short') {
-                gitCountsFmt = `[[ "$added" -gt 0 ]] && printf " \${GIT_CLEAN}A%s\${RESET}" "$added"
-            [[ "$modified" -gt 0 ]] && printf " \${PROGRESS_MID}M%s\${RESET}" "$modified"
             [[ "$untracked" -gt 0 ]] && printf " \${TOKEN_COLOR}?%s\${RESET}" "$untracked"`;
             } else {
                 gitCountsFmt = `[[ "$added" -gt 0 ]] && printf " \${GIT_CLEAN}%s new\${RESET}" "$added"
@@ -1133,10 +1118,7 @@ fi` : '# Git 信息已关闭'}
         }
 
         // ===== 复制安装命令 =====
-        // Python 配置脚本（写入 settings.json）预先 base64 编码，避免命令行引号冲突
-        const CONFIG_PY_B64 = 'aW1wb3J0IGpzb24sIG9zCnAgPSBvcy5wYXRoLmV4cGFuZHVzZXIoIn4vLmNsYXVkZS9zZXR0aW5ncy5qc29uIikKcyA9IGpzb24ubG9hZChvcGVuKHApKSBpZiBvcy5wYXRoLmV4aXN0cyhwKSBlbHNlIHt9CnNbInN0YXR1c0xpbmUiXSA9IHsidHlwZSI6ICJjb21tYW5kIiwgImNvbW1hbmQiOiBvcy5wYXRoLmV4cGFuZHVzZXIoIn4vLmNsYXVkZS9zdGF0dXNsaW5lLnNoIil9Cmpzb24uZHVtcChzLCBvcGVuKHAsICJ3IiksIGluZGVudD0yLCBlbnN1cmVfYXNjaWk9RmFsc2UpCg==';
-
-function copyInstallCmd() {
+        function copyInstallCmd() {
             const script = generateScript();
             // 编码脚本本体
             const b64 = btoa(unescape(encodeURIComponent(script)));
@@ -1171,7 +1153,7 @@ json.dump(s, open(p, "w"), indent=2, ensure_ascii=False)
 `;
             const CONFIG_PY_B64 = btoa(CONFIG_PY.trim());
 
-            const command = `echo '${b64}' | base64 -d > ~/.claude/statusline.sh && chmod +x ~/.claude/statusline.sh && echo '${CONFIG_PY_B64}' | base64 -d | python3 && echo 'Statusline installed!'`;
+            const command = `echo '${b64}' | base64 -d > ~/.claude/statusline.sh && chmod +x ~/.claude/statusline.sh && echo '${CONFIG_PY_B64}' | base64 -d | (python3 || python) && echo 'Statusline installed!'`;
 
             // 复制到剪贴板逻辑
             const doCopy = (text) => {
