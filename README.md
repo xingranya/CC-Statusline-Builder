@@ -29,6 +29,10 @@
 
 - 终端支持 256 色
 - 已安装 `jq`
+- Windows安装jq命令'iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))'
+'choco install jq'
+'jq --version'
+- Windows最好使用Git bash终端执行
 - UTF-8 编码
 
 ## 常见问题
