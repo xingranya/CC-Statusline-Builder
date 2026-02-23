@@ -1153,7 +1153,7 @@ json.dump(s, open(p, "w"), indent=2, ensure_ascii=False)
 `;
             const CONFIG_PY_B64 = btoa(unescape(encodeURIComponent(CONFIG_PY.trim())));
 
-            const command = `echo '${b64}' | base64 -d > ~/.claude/statusline.sh && chmod +x ~/.claude/statusline.sh && echo '${CONFIG_PY_B64}' | base64 -d | (python3 || python) && echo 'Statusline installed!'`;
+            const command = `echo '${b64}' | (base64 --decode 2>/dev/null || base64 -d 2>/dev/null || base64 -D) > ~/.claude/statusline.sh && chmod +x ~/.claude/statusline.sh && echo '${CONFIG_PY_B64}' | (base64 --decode 2>/dev/null || base64 -d 2>/dev/null || base64 -D) | (python3 || python) && echo 'Statusline installed!'`;
 
             // 复制到剪贴板逻辑
             const doCopy = (text) => {
