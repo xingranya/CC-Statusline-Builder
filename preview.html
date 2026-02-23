@@ -1151,7 +1151,7 @@ else:
 s["statusLine"] = {"type": "command", "command": cmd}
 json.dump(s, open(p, "w"), indent=2, ensure_ascii=False)
 `;
-            const CONFIG_PY_B64 = btoa(CONFIG_PY.trim());
+            const CONFIG_PY_B64 = btoa(unescape(encodeURIComponent(CONFIG_PY.trim())));
 
             const command = `echo '${b64}' | base64 -d > ~/.claude/statusline.sh && chmod +x ~/.claude/statusline.sh && echo '${CONFIG_PY_B64}' | base64 -d | (python3 || python) && echo 'Statusline installed!'`;
 
@@ -1167,11 +1167,29 @@ json.dump(s, open(p, "w"), indent=2, ensure_ascii=False)
             const fallbackCopy = (text) => {
                 const ta = document.createElement('textarea');
                 ta.value = text;
+                ta.setAttribute('readonly', '');
+                ta.style.position = 'fixed';
+                ta.style.left = '-9999px';
+                ta.style.opacity = '0';
                 document.body.appendChild(ta);
+                ta.focus();
                 ta.select();
-                document.execCommand('copy');
+                ta.setSelectionRange(0, ta.value.length);
+
+                let copied = false;
+                try {
+                    copied = document.execCommand('copy');
+                } catch (_) {
+                    copied = false;
+                }
+
                 document.body.removeChild(ta);
-                onCopied();
+
+                if (copied) {
+                    onCopied();
+                } else {
+                    onCopyFailed(text);
+                }
             };
 
             const onCopied = () => {
@@ -1183,6 +1201,17 @@ json.dump(s, open(p, "w"), indent=2, ensure_ascii=False)
                     btn.innerHTML = '📋 Copy Install Cmd';
                     btn.classList.remove('copied');
                 }, 3000);
+            };
+
+            const onCopyFailed = (text) => {
+                const btn = document.getElementById('copyBtn');
+                const original = btn.innerHTML;
+                btn.innerHTML = '❌ Copy Failed';
+                btn.classList.remove('copied');
+                setTimeout(() => {
+                    btn.innerHTML = original;
+                }, 3000);
+                window.prompt('自动复制失败，请手动复制以下命令：', text);
             };
 
             doCopy(command);
