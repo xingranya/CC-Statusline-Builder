@@ -50,6 +50,19 @@ chmod +x ~/.claude/statusline.sh
 echo $TERM  # 应该显示 xterm-256color 或类似
 ```
 
+### Windows 一行一个字母？
+```bash
+python - <<'PY'
+from pathlib import Path
+p = Path.home() / '.claude' / 'statusline.sh'
+b = p.read_bytes()
+print('utf16_bom:', b.startswith(b'\xff\xfe') or b.startswith(b'\xfe\xff'))
+print('utf8_bom:', b.startswith(b'\xef\xbb\xbf'))
+print('crlf:', b'\r\n' in b)
+PY
+```
+若出现 `utf16_bom: True` 或 `crlf: True`，重新执行页面里的安装命令即可自动修复（已内置 UTF-8/LF 归一化）。
+
 ### 出现乱码？
 ```bash
 echo $LANG  # 应该包含 UTF-8
